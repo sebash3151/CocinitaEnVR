@@ -6,6 +6,12 @@ TagManager:
   tags:
   - Fluid
   - Glass
+  - Food
+  - Tostadas
+  - Galletas
+  - Cupcakes
+  - Pan
+  - Donas
   layers:
   - Default
   - TransparentFX
