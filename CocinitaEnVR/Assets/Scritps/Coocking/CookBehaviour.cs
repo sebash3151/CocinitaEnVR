@@ -20,22 +20,14 @@ public class CookBehaviour : MonoBehaviour
 
     public void CookActive()
     {
-        if (Coocked)
-        {
-            meshRenderer.material = materialBurnt;
-            if(toast)
-            {
-                meshRenderer2.material = materialBurnt;
-                meshRenderer3.material = materialBurnt;
-            }
-        }else
+        if (!Coocked)
         {
             meshRenderer.material = materialCoocked;
             Coocked = true;
             if (toast)
             {
                 meshRenderer2.material = materialCoocked;
-                meshRenderer3.material= materialCoocked;
+                meshRenderer3.material = materialCoocked;
             }
         }
     }

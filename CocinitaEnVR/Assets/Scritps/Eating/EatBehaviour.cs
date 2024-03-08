@@ -22,6 +22,8 @@ public class EatBehaviour : MonoBehaviour
     [SerializeField] MeshRenderer meshRendererObject3;
     [SerializeField] MeshRenderer meshRendererObject4;
 
+    [SerializeField] Material normalMat;
+
     void Start()
     {
         meshRendererObject = objectReserve.GetComponent<MeshRenderer>();
@@ -38,6 +40,16 @@ public class EatBehaviour : MonoBehaviour
                 Destroy(gameObject);
             }
         }
+    }
+
+    public void Rellenar()
+    {
+        comido = false;
+        meshRendererObject.material = normalMat;
+        meshRendererObject2.material = normalMat;
+        meshRendererObject3.material = normalMat;
+        meshRendererObject4.material = normalMat;
+        objeto.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)

@@ -376,8 +376,8 @@ public class MeshDestroy : MonoBehaviour
         if(Exploded) return;
         if (speedCalculator.speed >= speedCalculator.limitSpeedToExplode)
         {
-            CutCascades = 5;
-            ExplodeForce = speedCalculator.speed * 70;
+            CutCascades = 4;
+            ExplodeForce = 150;
             DestroyMesh();
 
             MeshDestroy destroyed = collision.gameObject.GetComponent<MeshDestroy>();
@@ -389,10 +389,11 @@ public class MeshDestroy : MonoBehaviour
             }
             Exploded = true;
         }
+        if (speedCalculator2 == null) return;
         if (speedCalculator2.speed >= speedCalculator2.limitSpeedToExplode)
         {
-            CutCascades = 5;
-            ExplodeForce = speedCalculator2.speed * 70;
+            CutCascades = 4;
+            ExplodeForce = 150;
             DestroyMesh();
 
             MeshDestroy destroyed = collision.gameObject.GetComponent<MeshDestroy>();
