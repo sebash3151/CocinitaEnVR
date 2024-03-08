@@ -7,8 +7,10 @@ public class MeshDestroy : MonoBehaviour
 {
 
     private GameObject objeto;
+    
     [SerializeField] GameObject objectReserve;
     private SpeedCalculator speedCalculator;
+    
     private bool edgeSet = false;
     private Vector3 edgeVertex = Vector3.zero;
     private Vector2 edgeUV = Vector2.zero;
@@ -21,11 +23,39 @@ public class MeshDestroy : MonoBehaviour
     private float timer = 0;
 
     private List<PartMesh> parts = new List<PartMesh>();
+    [SerializeField] Material transparentMat;
+    private MeshRenderer meshRendererObject;
+
+    private MeshRenderer meshRendererObject2;
+    private MeshRenderer meshRendererObject3;
+    private bool Exploded = false;
+
+    private AudioSource source;
+
+    [SerializeField] bool vaso = false;
+    [SerializeField] GameObject objectReserve2;
+    [SerializeField] GameObject objectReserve3;
+    [SerializeField] GameObject objectReserve4;
+    [SerializeField] GameObject reguero;
+    private EatBehaviour eatBehaviour;
+    private SpeedCalculator speedCalculator2;
+    private GameObject objeto2;
 
     private void Start()
     {
         objeto = objectReserve;
         speedCalculator = objectReserve.GetComponent<SpeedCalculator>();
+        meshRendererObject = objectReserve.GetComponent<MeshRenderer>();
+        source = GetComponent<AudioSource>();
+        if (vaso)
+        {
+            objeto2 = objectReserve4;
+            meshRendererObject2 = objectReserve2.GetComponent<MeshRenderer>();
+            meshRendererObject3 = objectReserve3.GetComponent<MeshRenderer>();
+            source = objectReserve.GetComponent<AudioSource>();
+            eatBehaviour = GetComponent<EatBehaviour>();
+            speedCalculator2 = eatBehaviour.objeto.GetComponent<SpeedCalculator>();
+        }
     }
 
     void Update()
@@ -37,7 +67,7 @@ public class MeshDestroy : MonoBehaviour
         if (active)
         {
             timer += Time.deltaTime;
-            if (timer >= 1)
+            if (timer >= 10)
             {
                 active = false;
                 foreach (var item in parts)
@@ -98,7 +128,20 @@ public class MeshDestroy : MonoBehaviour
             parts[i].GameObject.GetComponent<Rigidbody>().AddForceAtPosition(parts[i].Bounds.center * ExplodeForce, transform.position);
         }
         active = true;
-        Destroy(objectReserve);
+        meshRendererObject.material = transparentMat;
+        meshRendererObject2.material = transparentMat;
+        meshRendererObject3.material = transparentMat;
+        source.Play();
+
+        if (vaso)
+        {
+            if (!eatBehaviour.comido)
+            {
+                Instantiate(reguero, new Vector3(0, 0, 0), Quaternion.identity);
+            }
+        }
+
+        //Destroy(objectReserve);
         // Destroy(parts[j].GameObject);
         //Destroy(gameObject);
     }
@@ -330,6 +373,7 @@ public class MeshDestroy : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         //Debug.Log("colisiono AUOFBADILUBFIAU");
+        if(Exploded) return;
         if (speedCalculator.speed >= speedCalculator.limitSpeedToExplode)
         {
             CutCascades = 5;
@@ -343,7 +387,22 @@ public class MeshDestroy : MonoBehaviour
                 destroyed.ExplodeForce = ExplodeForce;
                 destroyed.DestroyMesh();
             }
+            Exploded = true;
         }
-        
+        if (speedCalculator2.speed >= speedCalculator2.limitSpeedToExplode)
+        {
+            CutCascades = 5;
+            ExplodeForce = speedCalculator2.speed * 70;
+            DestroyMesh();
+
+            MeshDestroy destroyed = collision.gameObject.GetComponent<MeshDestroy>();
+            if (destroyed != null)
+            {
+                destroyed.CutCascades = CutCascades;
+                destroyed.ExplodeForce = ExplodeForce;
+                destroyed.DestroyMesh();
+            }
+            Exploded = true;
+        }
     }
 }
